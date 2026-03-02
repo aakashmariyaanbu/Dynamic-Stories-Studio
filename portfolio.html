@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Dynamic Stories Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#c9a96e;--gold-light:#e8d5b0;--dark:#0a0a08;--dark-2:#111110;--dark-3:#1a1a17;--cream:#f5f0e8;--muted:rgba(245,240,232,0.45);--fd:'Cormorant Garamond',serif;--fb:'Montserrat',sans-serif;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--cream);font-family:var(--fb);font-weight:300;overflow-x:hidden;cursor:none;}
+.cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;mix-blend-mode:difference;}
+.cring{position:fixed;width:36px;height:36px;border:1px solid rgba(201,169,110,0.5);border-radius:50%;pointer-events:none;z-index:9998;transition:all 0.18s;}
+.cring.x{transform:scale(2.4);border-color:rgba(201,169,110,0.2);}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,10,8,0.96);backdrop-filter:blur(24px);border-bottom:1px solid rgba(201,169,110,0.12);}
+.logo{font-family:var(--fd);font-size:1.25rem;font-weight:300;letter-spacing:0.08em;color:var(--cream);text-decoration:none;line-height:1.2;}
+.logo span{color:var(--gold);}
+.nl{display:flex;gap:36px;list-style:none;}
+.nl a{font-size:0.6rem;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;color:var(--cream);text-decoration:none;position:relative;opacity:0.7;transition:opacity 0.3s;}
+.nl a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width 0.4s;}
+.nl a:hover,.nl a.on{opacity:1;}.nl a:hover::after,.nl a.on::after{width:100%;}
+.nl a.on{color:var(--gold);}
+.ncta{font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--dark);background:var(--gold);padding:10px 22px;text-decoration:none;font-weight:500;transition:background 0.3s;}
+.ncta:hover{background:var(--gold-light);}
+.rv{opacity:0;transform:translateY(40px);transition:all 0.9s cubic-bezier(0.16,1,0.3,1);}
+.rv.on{opacity:1;transform:translateY(0);}
+.d1{transition-delay:0.1s;}.d2{transition-delay:0.2s;}.d3{transition-delay:0.3s;}
+.sl{font-size:0.57rem;letter-spacing:0.45em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:14px;}
+.sl::before{content:'';display:inline-block;width:26px;height:1px;background:var(--gold);}
+.st{font-family:var(--fd);font-size:clamp(2.8rem,5.5vw,5.2rem);font-weight:300;line-height:1.0;}
+.st em{font-style:italic;color:var(--gold);}
+.sb{font-size:0.7rem;letter-spacing:0.06em;line-height:1.85;color:var(--muted);}
+.bg{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--dark);background:var(--gold);padding:14px 40px;text-decoration:none;font-weight:500;position:relative;overflow:hidden;transition:color 0.4s;display:inline-block;}
+.bg::before{content:'';position:absolute;inset:0;background:var(--cream);transform:translateX(-101%);transition:transform 0.45s cubic-bezier(0.16,1,0.3,1);}
+.bg:hover::before{transform:translateX(0);}
+.bg span{position:relative;z-index:1;}
+/* PAGE HERO */
+.ph{padding:180px 60px 90px;position:relative;overflow:hidden;background:var(--dark);}
+.ph::after{content:'';position:absolute;right:-5%;top:10%;font-family:var(--fd);font-size:22vw;color:rgba(201,169,110,0.03);pointer-events:none;font-style:italic;white-space:nowrap;}
+.ph-title{font-family:var(--fd);font-size:clamp(4rem,10vw,9rem);font-weight:300;line-height:0.9;}
+.ph-title em{font-style:italic;color:var(--gold);}
+/* FILTERS */
+.filters{padding:40px 60px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.fl-lbl{font-size:0.55rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--muted);margin-right:12px;}
+.fb2{font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);background:transparent;border:1px solid rgba(201,169,110,0.15);padding:8px 22px;cursor:none;transition:all 0.35s;font-family:var(--fb);}
+.fb2:hover{color:var(--cream);border-color:rgba(201,169,110,0.4);}
+.fb2.on{color:var(--dark);background:var(--gold);border-color:var(--gold);}
+/* MASONRY */
+.masonry{padding:50px 60px 120px;column-count:3;column-gap:18px;}
+.mi{break-inside:avoid;margin-bottom:18px;position:relative;overflow:hidden;cursor:none;transition:opacity 0.5s,transform 0.5s;}
+.mi.hide{opacity:0;transform:scale(0.95);pointer-events:none;height:0;margin:0;overflow:hidden;}
+.mi-inner{position:relative;overflow:hidden;}
+.mi-inner img{width:100%;display:block;filter:brightness(0.82) saturate(0.75);transition:all 0.7s cubic-bezier(0.16,1,0.3,1);}
+.mi:hover .mi-inner img{transform:scale(1.06);filter:brightness(0.92) saturate(0.95);}
+.mi-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,8,0.92) 0%,transparent 55%);opacity:0;transition:opacity 0.45s;display:flex;flex-direction:column;justify-content:flex-end;padding:26px 22px;}
+.mi:hover .mi-ov{opacity:1;}
+.mi-glow{position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(201,169,110,0.35);opacity:0;transition:opacity 0.45s;}
+.mi:hover .mi-glow{opacity:1;}
+.mi-cat{font-size:0.52rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
+.mi-title{font-family:var(--fd);font-size:1.3rem;font-weight:300;color:var(--cream);}
+.mi-exp{position:absolute;top:14px;right:14px;width:32px;height:32px;border:1px solid rgba(201,169,110,0.5);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:0.85rem;opacity:0;transition:opacity 0.4s;background:rgba(10,10,8,0.5);}
+.mi:hover .mi-exp{opacity:1;}
+/* LIGHTBOX */
+.lb{position:fixed;inset:0;background:rgba(10,10,8,0.97);z-index:10000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.4s;}
+.lb.open{opacity:1;pointer-events:all;}
+.lb-close{position:absolute;top:28px;right:36px;font-size:1.4rem;color:var(--cream);cursor:none;opacity:0.6;transition:opacity 0.3s;background:none;border:none;font-family:var(--fd);}
+.lb-close:hover{opacity:1;}
+.lb-img{max-width:75vw;max-height:75vh;object-fit:contain;display:block;}
+.lb-info{text-align:center;margin-top:20px;}
+.lb-cap{font-family:var(--fd);font-size:1.6rem;font-weight:300;font-style:italic;margin-bottom:6px;}
+.lb-sub{font-size:0.58rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);}
+.lb-nav-l{left:28px;}.lb-nav-r{right:28px;}
+.lbn{width:46px;height:46px;border:1px solid rgba(201,169,110,0.3);background:transparent;color:var(--gold);font-size:1.1rem;cursor:none;transition:all 0.3s;display:flex;align-items:center;justify-content:center;}
+.lbn:hover{background:var(--gold);color:var(--dark);}
+/* BEFORE / AFTER */
+.ba-wrap{background:var(--dark-2);padding:120px 60px;}
+.ba-cont{position:relative;max-width:900px;margin:60px auto 0;aspect-ratio:16/9;overflow:hidden;cursor:ew-resize;}
+.ba-before,.ba-after{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.ba-before img,.ba-after img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.ba-before img{filter:grayscale(80%) brightness(0.7);}
+.ba-after img{filter:brightness(0.85) saturate(0.9);}
+.ba-after{clip-path:inset(0 50% 0 0);transition:none;}
+.ba-line{position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--gold);transform:translateX(-1px);z-index:5;}
+.ba-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;background:var(--gold);border-radius:50%;z-index:6;display:flex;align-items:center;justify-content:center;color:var(--dark);font-weight:700;box-shadow:0 0 28px rgba(201,169,110,0.4);}
+.ba-labels{position:absolute;top:20px;left:0;right:0;display:flex;justify-content:space-between;padding:0 24px;z-index:7;}
+.ba-lbl{font-size:0.55rem;letter-spacing:0.4em;text-transform:uppercase;background:rgba(10,10,8,0.8);padding:5px 12px;border:1px solid rgba(201,169,110,0.2);color:var(--gold);}
+/* FOOTER */
+footer{background:var(--dark-2);border-top:1px solid rgba(201,169,110,0.1);padding:90px 60px 40px;}
+.fg{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:60px;margin-bottom:70px;}
+.fl2{font-family:var(--fd);font-size:1.9rem;font-weight:300;letter-spacing:0.08em;color:var(--cream);margin-bottom:16px;display:block;line-height:1.2;}
+.fl2 span{color:var(--gold);}
+.ftag{font-size:0.68rem;line-height:1.9;color:var(--muted);letter-spacing:0.04em;max-width:240px;}
+.fh{font-size:0.57rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:22px;}
+.fls{list-style:none;}
+.fls li{margin-bottom:10px;}
+.fls a{font-size:0.68rem;color:var(--muted);text-decoration:none;letter-spacing:0.04em;transition:color 0.3s;}
+.fls a:hover{color:var(--gold);}
+.fbot{border-top:1px solid rgba(201,169,110,0.08);padding-top:34px;display:flex;justify-content:space-between;align-items:center;}
+.fc{font-size:0.57rem;letter-spacing:0.12em;color:var(--muted);}
+.fs{display:flex;gap:10px;margin-top:20px;}
+.fsoc{width:34px;height:34px;border:1px solid rgba(201,169,110,0.2);display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:0.65rem;color:var(--muted);transition:all 0.3s;}
+.fsoc:hover{border-color:var(--gold);color:var(--gold);}
+@media(max-width:1024px){nav{padding:16px 32px;}.masonry{column-count:2;padding:40px 32px 80px;}.ph{padding:140px 32px 60px;}.filters{padding:30px 32px 0;}}
+@media(max-width:768px){.nl,.ncta{display:none;}.masonry{column-count:1;}.fg{grid-template-columns:1fr 1fr;gap:30px;}}
+</style>
+</head>
+<body>
+<div class="cursor" id="cur"></div><div class="cring" id="crng"></div>
+<nav>
+  <a href="index.html" class="logo">Dynamic <span>Stories</span><br>Studio</a>
+  <ul class="nl"><li><a href="index.html">Home</a></li><li><a href="portfolio.html" class="on">Portfolio</a></li><li><a href="about.html">About</a></li><li><a href="services.html">Services</a></li><li><a href="blog.html">Journal</a></li><li><a href="contact.html">Contact</a></li></ul>
+  <a href="contact.html" class="ncta">Book a Session</a>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="ph">
+  <div class="sl rv">Visual World</div>
+  <h1 class="ph-title rv">Visual<br><em>Stories</em></h1>
+  <p class="sb rv" style="max-width:480px;margin-top:28px;">Every image carries a universe of emotion, light, and meaning. Browse our curated collection spanning editorial, portrait, commercial, and fine art photography from around the world.</p>
+</div>
+
+<!-- FILTERS -->
+<div class="filters rv">
+  <span class="fl-lbl">Filter:</span>
+  <button class="fb2 on" data-f="all">All Work</button>
+  <button class="fb2" data-f="editorial">Editorial</button>
+  <button class="fb2" data-f="portrait">Portrait</button>
+  <button class="fb2" data-f="wedding">Wedding</button>
+  <button class="fb2" data-f="commercial">Commercial</button>
+  <button class="fb2" data-f="landscape">Landscape</button>
+</div>
+
+<!-- MASONRY GRID -->
+<div class="masonry" id="grid">
+
+  <div class="mi rv" data-cat="editorial" onclick="openLb(0)">
+    <div class="mi-inner"><img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=700&q=75&auto=format&fit=crop" alt="Vogue editorial" style="height:520px;object-fit:cover;width:100%;"></div>
+    <div class="mi-ov"><div class="mi-cat">Editorial</div><div class="mi-title">Vogue India — Autumn Issue</div></div>
+    <div class="mi-glow"></div><div class="mi-exp">⤢</div>
+  </div>
+
+  <div class="mi rv d1" data-cat="portrait" onclick="openLb(1)">
+    <div class="mi-inner"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=700&q=75&auto=format&fit=crop" alt="Portrait" style="height:360px;object-fit:cover;width:100%;"></div>
+    <div class="mi-ov"><div class="mi-cat">Portrait</div><div class="mi-title">The Silence Series — Vol. I</div></div>
+    <div class="mi-glow"></div><div class="mi-exp">⤢</div>
+  </div>
+
+  <div class="mi rv d2" data-cat="wedding" onclick="openLb(2)">
+    <div class="mi-inner"><img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=700&q=75&auto=format&fit=crop" alt="Wedding Tuscany" style="height:440px;object-fit:cover;width:100%;"></div>
+    <div class="mi-ov"><div class="mi-cat">Wedding</div><div class="mi-title">Isabella & Marco — Tuscany</div></div>
+    <div class="mi-glow"></div><div class="mi-exp">⤢</div>
+  </div>
+
+  <div class="mi rv" data-cat="commercial" onclick="openLb(3)">
+    <div class="mi-inner"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=700&q=75&auto=format&fit=crop" alt="Commercial fashion" style="height:380px;object-fit:cover;width:100%;"></div>
+    <div class="mi-ov"><div class="mi-cat">Commercial</div><div class="mi-title">Zara — Spring Collection</div></div>
+    <div class="mi-glow"></div><div class="mi-exp">⤢</div>
+  </div>
+
+  <div class="mi rv d1" data-cat="landscape" onclick="openLb(4)">
+    <div class="mi-inner"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=700&q=75&auto=format&fit=crop" alt="Mountain landscape" style="height:520px;object-fit:cover;width:100%;"></div>
+    <div class="mi-ov"><div class="mi-cat">Landscape</div><div class="mi-title">Patagonia — Edge of the World</div></div>
+    <div class="mi-glow"></div><div class="mi-exp">⤢</div>
+  </div>
+
+  <div class="mi rv d2" data-cat="portrait" onclick="openLb(5)">
+    <div class="mi-inner"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=700&q=75&auto=format&fit=crop" alt="Portrait woman" style="height:310px;object-fit:cover;width:100%;"></div>
+    <div class="mi-ov"><div class="mi-cat">Portrait</div><div class="mi-title">Elara — Personal Project</div></div>
+    <div class="mi-glow"></div><div class="mi-exp">⤢</div>
+  </div>
+
+  <div class="mi rv" data-cat="editorial" onclick="openLb(6)">
+    <div class="mi-inner"><img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=700&q=75&auto=format&fit=crop" alt="Fashion editorial" style="height:460px;object-fit:cover;width:100%;"></div>
+    <div class="mi-ov"><div class="mi-cat">Editorial</div><div class="mi-title">Harper's Bazaar — The Gold Issue</div></div>
+    <div class="mi-glow"></div><div class="mi-exp">⤢</div>
+  </div>
+
+  <div class="mi rv d1" data-cat="wedding" onclick="openLb(7)">
+    <div class="mi-inner"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=700&q=75&auto=format&fit=crop" alt="Wedding ceremony" style="height:400px;object-fit:cover;width:100%;"></div>
+    <div class="mi-ov"><div class="mi-cat">Wedding</div><div class="mi-title">Priya & Arjun — Jaipur Palace</div></div>
+    <div class="mi-glow"></div><div class="mi-exp">⤢</div>
+  </div>
+
+  <div class="mi rv d2" data-cat="commercial" onclick="openLb(8)">
+    <div class="mi-inner"><img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=700&q=75&auto=format&fit=crop" alt="Nike commercial" style="height:340px;object-fit:cover;width:100%;"></div>
+    <div class="mi-ov"><div class="mi-cat">Commercial</div><div class="mi-title">Nike — Urban Motion Campaign</div></div>
+    <div class="mi-glow"></div><div class="mi-exp">⤢</div>
+  </div>
+
+  <div class="mi rv" data-cat="landscape" onclick="openLb(9)">
+    <div class="mi-inner"><img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=700&q=75&auto=format&fit=crop" alt="Iceland landscape" style="height:490px;object-fit:cover;width:100%;"></div>
+    <div class="mi-ov"><div class="mi-cat">Landscape</div><div class="mi-title">Iceland — Midnight Aurora</div></div>
+    <div class="mi-glow"></div><div class="mi-exp">⤢</div>
+  </div>
+
+  <div class="mi rv d1" data-cat="portrait" onclick="openLb(10)">
+    <div class="mi-inner"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=700&q=75&auto=format&fit=crop" alt="Male portrait" style="height:370px;object-fit:cover;width:100%;"></div>
+    <div class="mi-ov"><div class="mi-cat">Portrait</div><div class="mi-title">The Alchemist Series — David</div></div>
+    <div class="mi-glow"></div><div class="mi-exp">⤢</div>
+  </div>
+
+  <div class="mi rv d2" data-cat="editorial" onclick="openLb(11)">
+    <div class="mi-inner"><img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=700&q=75&auto=format&fit=crop" alt="Fashion editorial 2" style="height:420px;object-fit:cover;width:100%;"></div>
+    <div class="mi-ov"><div class="mi-cat">Editorial</div><div class="mi-title">Vanity Fair — The New Romantics</div></div>
+    <div class="mi-glow"></div><div class="mi-exp">⤢</div>
+  </div>
+
+  <div class="mi rv" data-cat="wedding" onclick="openLb(12)">
+    <div class="mi-inner"><img src="https://images.unsplash.com/photo-1460978812857-470ed1c77af0?w=700&q=75&auto=format&fit=crop" alt="Wedding couple" style="height:350px;object-fit:cover;width:100%;"></div>
+    <div class="mi-ov"><div class="mi-cat">Wedding</div><div class="mi-title">Sophie & James — Lake Como</div></div>
+    <div class="mi-glow"></div><div class="mi-exp">⤢</div>
+  </div>
+
+  <div class="mi rv d1" data-cat="commercial" onclick="openLb(13)">
+    <div class="mi-inner"><img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=700&q=75&auto=format&fit=crop" alt="Store commercial" style="height:300px;object-fit:cover;width:100%;"></div>
+    <div class="mi-ov"><div class="mi-cat">Commercial</div><div class="mi-title">The Row — Flagship Store</div></div>
+    <div class="mi-glow"></div><div class="mi-exp">⤢</div>
+  </div>
+
+  <div class="mi rv d2" data-cat="landscape" onclick="openLb(14)">
+    <div class="mi-inner"><img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=700&q=75&auto=format&fit=crop" alt="Forest" style="height:430px;object-fit:cover;width:100%;"></div>
+    <div class="mi-ov"><div class="mi-cat">Landscape</div><div class="mi-title">Pacific Northwest — Ancient Light</div></div>
+    <div class="mi-glow"></div><div class="mi-exp">⤢</div>
+  </div>
+
+</div>
+
+<!-- BEFORE / AFTER -->
+<div class="ba-wrap">
+  <div class="rv">
+    <div class="sl">The Transformation</div>
+    <h2 class="st">Before &<br><em>After</em></h2>
+    <p class="sb" style="max-width:480px;margin-top:18px;">Drag the divider to witness our signature post-processing craft — where raw captures transform into timeless, cinematic imagery. Every adjustment serves the story.</p>
+  </div>
+  <div class="ba-cont rv" id="baCont">
+    <div class="ba-before"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=900&q=75&auto=format&fit=crop" alt="Before"></div>
+    <div class="ba-after" id="baAfter"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=900&q=80&auto=format&fit=crop" alt="After"></div>
+    <div class="ba-line" id="baLine"></div>
+    <div class="ba-handle" id="baHandle">⟺</div>
+    <div class="ba-labels"><span class="ba-lbl">Before</span><span class="ba-lbl">After</span></div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section style="text-align:center;background:var(--dark);border-top:1px solid rgba(201,169,110,0.08);padding:100px 60px;">
+  <div class="rv">
+    <div class="sl" style="justify-content:center;">Commission Your Story</div>
+    <h2 class="st" style="margin:0 auto 20px;max-width:580px;">Every image here started<br>with a <em>conversation.</em></h2>
+    <p class="sb" style="margin:0 auto 44px;max-width:400px;text-align:center;">Let's discuss how we can create images that tell your story with the same depth and artistry.</p>
+    <a href="contact.html" class="bg"><span>Start the Conversation →</span></a>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lb" id="lb">
+  <button class="lb-close" id="lbClose">✕</button>
+  <button class="lbn lb-nav lb-nav-l" id="lbP">←</button>
+  <button class="lbn lb-nav lb-nav-r" id="lbN">→</button>
+  <div style="text-align:center;">
+    <img class="lb-img" id="lbImg" src="" alt="">
+    <div class="lb-info"><div class="lb-cap" id="lbCap"></div><div class="lb-sub" id="lbSub"></div></div>
+  </div>
+</div>
+
+<footer>
+  <div class="fg">
+    <div><span class="fl2">Dynamic <span>Stories</span><br>Studio</span><p class="ftag">Award-winning photography studio crafting visual stories that transcend time and move hearts.</p><div class="fs"><a href="#" class="fsoc">ig</a><a href="#" class="fsoc">in</a><a href="#" class="fsoc">tw</a><a href="#" class="fsoc">pb</a></div></div>
+    <div><div class="fh">Navigate</div><ul class="fls"><li><a href="index.html">Home</a></li><li><a href="portfolio.html">Portfolio</a></li><li><a href="about.html">About</a></li><li><a href="services.html">Services</a></li><li><a href="blog.html">Journal</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+    <div><div class="fh">Services</div><ul class="fls"><li><a href="service-portrait.html">Portrait Sessions</a></li><li><a href="service-wedding.html">Wedding Stories</a></li><li><a href="service-editorial.html">Editorial & Fashion</a></li><li><a href="service-commercial.html">Commercial</a></li><li><a href="service-fineart.html">Fine Art Prints</a></li><li><a href="service-masterclass.html">Masterclasses</a></li></ul></div>
+    <div><div class="fh">Contact</div><ul class="fls"><li><a href="mailto:hello@dynamicstories.studio">hello@dynamicstories.studio</a></li><li>+1 (212) 555-0191</li><li>42 Crosby St, New York</li><li>London · Mumbai · Dubai</li></ul></div>
+  </div>
+  <div class="fbot"><span class="fc">© 2024 Dynamic Stories Studio. All rights reserved.</span><span class="fc">Privacy · Terms</span><div class="fs"><a href="#" class="fsoc">ig</a><a href="#" class="fsoc">in</a><a href="#" class="fsoc">tw</a></div></div>
+</footer>
+
+<script>
+// Cursor
+const cur=document.getElementById('cur'),crng=document.getElementById('crng');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx-4+'px';cur.style.top=my-4+'px';});
+(function a(){rx+=(mx-rx-18)*0.12;ry+=(my-ry-18)*0.12;crng.style.left=rx+'px';crng.style.top=ry+'px';requestAnimationFrame(a);})();
+document.querySelectorAll('a,button,.mi,.fb2').forEach(el=>{el.addEventListener('mouseenter',()=>crng.classList.add('x'));el.addEventListener('mouseleave',()=>crng.classList.remove('x'));});
+// Reveal
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');}),{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+// Filter
+const fbns=document.querySelectorAll('.fb2');
+const items=document.querySelectorAll('.mi');
+fbns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    fbns.forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+    const f=btn.dataset.f;
+    items.forEach(item=>{
+      const match=f==='all'||item.dataset.cat===f;
+      item.style.transition='opacity 0.4s,transform 0.4s';
+      if(!match){item.style.opacity='0';item.style.transform='scale(0.94)';setTimeout(()=>item.classList.add('hide'),400);}
+      else{item.classList.remove('hide');setTimeout(()=>{item.style.opacity='1';item.style.transform='scale(1)';},50);}
+    });
+  });
+});
+// Lightbox
+const lbData=[
+  {src:'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1200&q=80&auto=format&fit=crop',cap:'Vogue India — Autumn Issue',sub:'Editorial'},
+  {src:'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1200&q=80&auto=format&fit=crop',cap:'The Silence Series — Vol. I',sub:'Portrait'},
+  {src:'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=1200&q=80&auto=format&fit=crop',cap:'Isabella & Marco — Tuscany',sub:'Wedding'},
+  {src:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1200&q=80&auto=format&fit=crop',cap:'Zara — Spring Collection',sub:'Commercial'},
+  {src:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80&auto=format&fit=crop',cap:'Patagonia — Edge of the World',sub:'Landscape'},
+  {src:'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=1200&q=80&auto=format&fit=crop',cap:'Elara — Personal Project',sub:'Portrait'},
+  {src:'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1200&q=80&auto=format&fit=crop',cap:"Harper's Bazaar — The Gold Issue",sub:'Editorial'},
+  {src:'https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=80&auto=format&fit=crop',cap:'Priya & Arjun — Jaipur Palace',sub:'Wedding'},
+  {src:'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&q=80&auto=format&fit=crop',cap:'Nike — Urban Motion Campaign',sub:'Commercial'},
+  {src:'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1200&q=80&auto=format&fit=crop',cap:'Iceland — Midnight Aurora',sub:'Landscape'},
+  {src:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=80&auto=format&fit=crop',cap:'The Alchemist Series — David',sub:'Portrait'},
+  {src:'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1200&q=80&auto=format&fit=crop',cap:'Vanity Fair — The New Romantics',sub:'Editorial'},
+  {src:'https://images.unsplash.com/photo-1460978812857-470ed1c77af0?w=1200&q=80&auto=format&fit=crop',cap:'Sophie & James — Lake Como',sub:'Wedding'},
+  {src:'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&q=80&auto=format&fit=crop',cap:'The Row — Flagship Store',sub:'Commercial'},
+  {src:'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1200&q=80&auto=format&fit=crop',cap:'Pacific Northwest — Ancient Light',sub:'Landscape'},
+];
+let curLb=0;
+const lb=document.getElementById('lb');
+function openLb(i){curLb=i;updateLb();lb.classList.add('open');document.body.style.overflow='hidden';}
+function updateLb(){const d=lbData[curLb];document.getElementById('lbImg').src=d.src;document.getElementById('lbCap').textContent=d.cap;document.getElementById('lbSub').textContent=d.sub;}
+document.getElementById('lbClose').onclick=()=>{lb.classList.remove('open');document.body.style.overflow='';};
+document.getElementById('lbP').onclick=()=>{curLb=Math.max(0,curLb-1);updateLb();};
+document.getElementById('lbN').onclick=()=>{curLb=Math.min(lbData.length-1,curLb+1);updateLb();};
+lb.addEventListener('click',e=>{if(e.target===lb){lb.classList.remove('open');document.body.style.overflow='';}});
+document.addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}if(e.key==='ArrowLeft'){curLb=Math.max(0,curLb-1);updateLb();}if(e.key==='ArrowRight'){curLb=Math.min(lbData.length-1,curLb+1);updateLb();}});
+// Before/After
+const baCont=document.getElementById('baCont'),baAfter=document.getElementById('baAfter'),baLine=document.getElementById('baLine'),baHandle=document.getElementById('baHandle');
+let dragging=false;
+function setBA(x){const r=baCont.getBoundingClientRect();const p=Math.max(0,Math.min(100,((x-r.left)/r.width)*100));baAfter.style.clipPath=`inset(0 ${100-p}% 0 0)`;baLine.style.left=p+'%';baHandle.style.left=p+'%';}
+baCont.addEventListener('mousedown',e=>{dragging=true;setBA(e.clientX);});
+document.addEventListener('mousemove',e=>{if(dragging)setBA(e.clientX);});
+document.addEventListener('mouseup',()=>dragging=false);
+baCont.addEventListener('touchstart',e=>{dragging=true;setBA(e.touches[0].clientX);});
+document.addEventListener('touchmove',e=>{if(dragging)setBA(e.touches[0].clientX);});
+document.addEventListener('touchend',()=>dragging=false);
+// Page transitions
+document.querySelectorAll('a[href$=".html"]').forEach(l=>{l.addEventListener('click',e=>{const h=l.getAttribute('href');if(!h.startsWith('http')){e.preventDefault();document.body.style.cssText='opacity:0;transition:opacity 0.4s ease;';setTimeout(()=>window.location.href=h,400);}});});
+window.addEventListener('pageshow',()=>{document.body.style.opacity='0';setTimeout(()=>{document.body.style.cssText='opacity:1;transition:opacity 0.55s ease;';},60);});
+</script>
+</body>
+</html>
